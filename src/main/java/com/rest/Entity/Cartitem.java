@@ -1,13 +1,19 @@
 package com.rest.Entity;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -18,9 +24,6 @@ public class Cartitem implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int CartId;
-	
-	@Column(nullable = false)
-	private int Quantity;
 	
 	@ManyToOne
 	@JoinColumn(name = "id")
@@ -34,14 +37,6 @@ public class Cartitem implements Serializable {
 		CartId = cartId;
 	}
 
-	public int getQuantity() {
-		return Quantity;
-	}
-
-	public void setQuantity(int quantity) {
-		Quantity = quantity;
-	}
-
 	public Users getUser() {
 		return user;
 	}
@@ -49,18 +44,25 @@ public class Cartitem implements Serializable {
 	public void setUser(Users user) {
 		this.user = user;
 	}
+     
 
-	public Product getProduct() {
-		return product;
+
+
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	   @JoinTable(
+	           name = "product_cart",
+	           joinColumns = @JoinColumn(name = "CartId"),
+	           inverseJoinColumns = @JoinColumn(name = "productId")
+	           )
+	   private Map<Integer,Product> products;
+
+	public Map<Integer, Product> getProducts() {
+		return products;
 	}
 
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setProducts(Map<Integer, Product> products) {
+		this.products = products;
 	}
-
-	@ManyToOne
-	@JoinColumn(name = "productId")
-	private Product product;
 	
 	
 }

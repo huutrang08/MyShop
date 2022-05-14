@@ -42,23 +42,9 @@ public class Product implements Serializable{
 	@Column(nullable = false)
   private int sold;
 
-	public Set<Cartitem> getCartitems() {
-		return cartitems;
-	}
-
-	public void setCartitems(Set<Cartitem> cartitems) {
-		this.cartitems = cartitems;
-	}
-
 	@ManyToOne
 	@JoinColumn(name = "categoryId")
 	private Category category;
-	
-	@OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
-	private Set<OderDetail> oderDetail;
-	
-	@OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
-	private Set<Cartitem> cartitems;
 	
 	public int getProductId() {
 		return productId;
@@ -137,13 +123,5 @@ public class Product implements Serializable{
 
 	public void setCategory(Category category) {
 		this.category = category;
-	}
-
-	public Set<OderDetail> getOderDetail() {
-		return oderDetail;
-	}
-
-	public void setOderDetail(Set<OderDetail> oderDetail) {
-		this.oderDetail = oderDetail;
 	}
 }

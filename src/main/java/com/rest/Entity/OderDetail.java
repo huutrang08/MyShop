@@ -1,13 +1,20 @@
 package com.rest.Entity;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -18,6 +25,7 @@ public class OderDetail implements Serializable{
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int OderDetailId;
+   
    public int getOderDetailId() {
 	return OderDetailId;
 }
@@ -42,14 +50,6 @@ public void setTotal(float total) {
 	this.total = total;
 }
 
-public Product getProduct() {
-	return product;
-}
-
-public void setProduct(Product product) {
-	this.product = product;
-}
-
 public Oder getOder() {
 	return oder;
 }
@@ -63,11 +63,21 @@ public void setOder(Oder oder) {
    @Column(nullable = false)
   private float total;
    
-   @ManyToOne
-   @JoinColumn(name = "productId")
-   private Product product;
+   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+   @JoinTable(
+           name = "product_oder",
+           joinColumns = @JoinColumn(name = "OderDetailId"),
+           inverseJoinColumns = @JoinColumn(name = "productId")
+           )
+   private Collection<Product> products;
    
-   @ManyToOne
-   @JoinColumn(name = "OderId")
-   private Oder oder;
+   public Collection<Product> getProducts() {
+	return products;
+}
+
+public void setProducts(Collection<Product> products) {
+	this.products = products;
+}
+
+private Oder oder;
 }

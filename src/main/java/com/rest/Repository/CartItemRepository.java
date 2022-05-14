@@ -9,5 +9,5 @@ import com.rest.Entity.Cartitem;
 import com.rest.Entity.Users;
 @Repository
 public interface CartItemRepository extends JpaRepository<Cartitem, Integer> {
-	List<Cartitem> findByUsers(Users users);
+	List<Cartitem> findByUserId(Users users);
 }

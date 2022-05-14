@@ -19,8 +19,6 @@ public interface CartItemServices {
 
 	<S extends Cartitem> S save(S entity);
 
-	void add(Cartitem cartitem, Map<Integer, Cartitem> map, int id);
-
 	List<Cartitem> findByUsers(Users users);
 
 }

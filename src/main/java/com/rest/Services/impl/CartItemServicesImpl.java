@@ -17,19 +17,9 @@ public class CartItemServicesImpl implements CartItemServices{
  CartItemRepository cartItemRepository;
 	
 	@Override
-	public void add(Cartitem cartitem,Map<Integer, Cartitem> map,int id) {
-		Cartitem cart = map.get(id);
-		if (cart != null) {
-			cart.setQuantity(cart.getQuantity()+cartitem.getQuantity());
-			save(cart);
-		}save(cartitem);
-	}
-	
-	@Override
 	public List<Cartitem> findByUsers(Users users) {
-		return cartItemRepository.findByUsers(users);
+		return cartItemRepository.findByUserId(users);
 	}
-
 	@Override
 	public <S extends Cartitem> S save(S entity) {
 		return cartItemRepository.save(entity);

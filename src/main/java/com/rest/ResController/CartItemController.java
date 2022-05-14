@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rest.Entity.Cartitem;
+import com.rest.Entity.Product;
 import com.rest.Entity.Users;
 import com.rest.Services.CartItemServices;
 import com.rest.Services.JwtServices;
@@ -44,18 +46,15 @@ public class CartItemController {
 			}
 			)
 	@ResponseBody
-	public ResponseEntity<Cartitem> adds(@RequestBody Cartitem cartitem,@RequestParam("token") String token){
-    	Map<Integer, Cartitem> map = new HashMap<>();
-    	String user = jwtServices.getUserNameFromJwtToken(token);
-    	Users users = userServices.findByusername(user);
-    	List<Cartitem> list = cartItemServices.findByUsers(users);
-     for (int i = 0; i < list.size() ; i++) {
-		map.put(list.get(i).getProduct().getProductId(), list.get(i));
-	}
-     cartitem.setUser(users);
-     cartitem.setQuantity(1);
-     cartitem.setProduct(cartitem.getProduct());
-     cartItemServices.add(cartitem, map, cartitem.getCartId());
+	public ResponseEntity<Cartitem> adds(@RequestBody Cartitem cartitem,@RequestHeader String token){
+    	Map<Integer,Product> map = new HashMap<>();
+    	map = cartitem.getProducts();
+    	for(Integer a: map.keySet()) {
+    		if (a==0) {
+				map.remove(a);
+			}
+    	}
+    	cartItemServices.save(cartitem);
      return ResponseEntity.ok(cartitem);
     }
     
@@ -66,7 +65,7 @@ public class CartItemController {
 			}
 			)
 	@ResponseBody
-	public List<Cartitem> list(@RequestBody String token){
+	public List<Cartitem> list(@RequestHeader String token){
     	Users users = userServices.findByusername(jwtServices.getUserNameFromJwtToken(token));
     	return cartItemServices.findByUsers(users);
     }
@@ -95,7 +94,6 @@ public class CartItemController {
     	if (quantity<=0) {
 			cartItemServices.deleteById(id);
 		}
-    	cartitem.get().setQuantity(quantity);
     	cartItemServices.save(cartitem.get());
     	return cartitem.get();
     	

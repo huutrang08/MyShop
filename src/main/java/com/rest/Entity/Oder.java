@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 @Table
 @Entity
@@ -64,13 +65,15 @@ public class Oder implements Serializable{
 		this.user = user;
 	}
 
-	public Set<OderDetail> getOderDetail() {
+
+	public OderDetail getOderDetail() {
 		return oderDetail;
 	}
 
-	public void setOderDetail(Set<OderDetail> oderDetail) {
+	public void setOderDetail(OderDetail oderDetail) {
 		this.oderDetail = oderDetail;
 	}
+
 
 	@Column(nullable = false)
    private String status;
@@ -79,6 +82,7 @@ public class Oder implements Serializable{
 	@JoinColumn(name = "id")
 	private Users user;
 	
-	@OneToMany(mappedBy = "oder",cascade = CascadeType.ALL)
-	private Set<OderDetail> oderDetail;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "OderId", referencedColumnName = "OderDetailId" )
+	private OderDetail oderDetail;
 }
